@@ -1,42 +1,42 @@
 #include <iostream>
-#include <vector>
-
-using std::vector;
-
-// Declaring global variables and data structures
-int num_processes, res_types;
-vector<vector<int>> alloc_matrix;
-vector<vector<int>> max_res_matrix;
-vector<bool> availability_vec;
-vector<vector<int> need_matrix;
-
-bool isSafe(const vector<bool>&);
+#include "sysdata.h"
 
 int main(){
    std::cout << "initiated program" << std::endl;
    // note: still need to retrieve data for alloc_matrix, etc
    // and number of processes, res types
-   isSafe(availability_vec);
+   
+   // calculate need matrix (N = M - A)
+   for(int i = 0; i < num_processes; ++i){
+       for(int j = 0; j < res_types; ++j){
+           need[i][j] = max_res[i][j] - alloc[i][j];
+       }
+   }
+   isSafe(availability);
 }
 
-bool isSafe(const std::vector<bool>& input){
-   vector<bool> tmp;
+bool isSafe(const std::vector<int>& available_t){
+   vector<int> work(res_types); // work vector
    vector<bool> finished(num_processes); // initialized to false
-   // initialize tmp array
-   for(int i = 0; i < input.size(); ++i){
-      tmp[i] = input[i];
+   // initialize tmp array (work = available)
+   for(int i = 0; i < res_types + 1; ++i){
+      work[i] = available_t[i];
+      std::cout << "[" << available_t[i] << "]";
    }
+   std::cout << '\n';
    // find a process i for which the process is avalable
    // if so, set finished[i] to true and assign the input from the
    // availablility vector into the allocation matrix
    int safe_count = 0; 
-   for(int i = 0; i < tmp.size(); ++i){
-       if(finished[i] == 0 && need_matrix[i] <= tmp[i]){
-           alloc_matrix[i] = tmp[i];
-           finished[i] == 1;
-           safe_count++;
+   for(int i = 0; i < num_processes + 1; ++i){
+       for(int j = 0; j < res_types + 1; ++j){
+           if(finished[i] == 0 && need[i][j] <= available_t[i]){
+               alloc[i][j] = available_t[i];
+               finished[i] == 1;
+               safe_count++;
+           }
+           else return 0; // found an unsafe element, therefore the state is unsafe
        }
-       else return 0; // found an unsafe element, therefore the state is unsafe
    }
    return 1;
 }
