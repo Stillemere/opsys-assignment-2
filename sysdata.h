@@ -4,8 +4,8 @@
 #include <vector>
 using std::vector;
 
-// Declaring global variables and data structures
-// that are necessary for banker's algorithm
+// Declaring variables with data
+// that is necessary for banker's algorithm
 int num_processes = 5; // rows
 int res_types = 3; // columns
 vector<vector<int>> alloc = {
@@ -23,7 +23,7 @@ vector<vector<int>> max_res = {
     { 4, 3, 3 },
 };
 vector<int> availability = { 3, 3, 2 };
-vector<vector<int>> need;
+vector<vector<int>> need(num_processes, vector<int>(res_types));
 
 bool isSafe(const vector<int>&);
 
