@@ -2,15 +2,14 @@
 #include "sysdata.h"
 
 int main(){
-   std::cout << "initiated program" << std::endl;
-   // note: still need to retrieve data for alloc_matrix, etc
+   // note: still need to retrieve data for allocation matrix, etc
    // and number of processes, res types
 
    // calculate need matrix (N = M - A)
    std::cout << "Need matrix: " << std::endl;
    for(int i = 0; i < num_processes; ++i){
        for(int j = 0; j < res_types; ++j){
-           need[i][j] = max_res[i][j] - alloc[i][j];
+           need[i][j] = max_res[i][j] - allocation[i][j];
            std::cout << '[' << need[i][j] << ']';
        }
        std::cout << '\n';
@@ -27,22 +26,39 @@ bool isSafe(const std::vector<int>& available_t){
    vector<int> work(res_types); // work vector
    vector<bool> finished(num_processes); // initialized to false
    // initialize tmp array (work = available)
+   std::cout << "work[]: ";
    for(int i = 0; i < res_types; ++i){
       work[i] = available_t[i]; // debug note: this code's good
+      std::cout << '[' << work[i] << ']';
    }
+   std::cout << '\n';
    // find a process i for which the process is avalable
    // if so, set finished[i] to true and assign the input from the
    // availablility vector into the allocation matrix
-   int safe_count = 0; 
    for(int i = 0; i < num_processes; ++i){
        for(int j = 0; j < res_types; ++j){
+           if(need[i][j] <= work[i]){
+               std::cout << need[i][j] << " <= " << work[i] << " | ";
+               work[i] += allocation[i][j];
+               finished[i] = 1;
+           }
+           else { std::cout << need[i][j] << " !<= " << work[i] << " | "; }
+           /*
            if(finished[i] == 0 && need[i][j] <= available_t[i]){
-               alloc[i][j] = available_t[i];
+               allocation[i][j] = available_t[i];
                finished[i] == 1;
                safe_count++;
            }
-           else return 0; // found an unsafe element, therefore the state is unsafe
+           */
        }
+       std::cout << '\n';
    }
-   return 1;
+   std::cout << "Finished vector: \n";
+   for(int i = 0; i < num_processes; ++i) std::cout << '[' << finished[i] << ']';
+   std::cout << '\n';
+
+   int safe_count;
+   for(int i = 0; i < finished.size(); i++) if(finished[i] == 1) ++safe_count;
+   if(safe_count == num_processes) return 1;
+   return 0;
 }

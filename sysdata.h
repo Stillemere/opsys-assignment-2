@@ -8,7 +8,7 @@ using std::vector;
 // that is necessary for banker's algorithm
 int num_processes = 5; // rows
 int res_types = 3; // columns
-vector<vector<int>> alloc = {
+vector<vector<int>> allocation = {
     { 0, 1, 0 },
     { 2, 0, 0 },
     { 3, 0, 2 },
