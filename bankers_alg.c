@@ -14,8 +14,7 @@ int main(){
        }
        std::cout << '\n';
    }
-   bool safety = isSafe(availability);
-   if(safety){
+   if(isSafe(availability)){
        std::cout << "The system is in a safe state" << std::endl;
        std::cout << "Safe sequence: " << std::endl;
    }
@@ -37,12 +36,16 @@ bool isSafe(const std::vector<int>& available_t){
    // availablility vector into the allocation matrix
    for(int i = 0; i < num_processes; ++i){
        for(int j = 0; j < res_types; ++j){
-           if(need[i][j] <= work[i]){
-               std::cout << need[i][j] << " <= " << work[i] << " | ";
-               work[i] += allocation[i][j];
+           //std::cout << i << ',' << j << " | ";
+           if(need[i][j] <= work[j]){
+               //std::cout << need[i][j] << " <= " << work[i] << " | ";
+	       //std::cout << work[j] << " | ";
+               work[j] += allocation[i][j];
+               //std::cout << work[j] << std::endl;
                finished[i] = 1;
            }
-           else { std::cout << need[i][j] << " !<= " << work[i] << " | "; }
+           //std::cout << '\n';
+           //else { std::cout << need[i][j] << " !<= " << work[i] << " | "; }
            /*
            if(finished[i] == 0 && need[i][j] <= available_t[i]){
                allocation[i][j] = available_t[i];
@@ -51,7 +54,7 @@ bool isSafe(const std::vector<int>& available_t){
            }
            */
        }
-       std::cout << '\n';
+       //std::cout << '\n';
    }
    std::cout << "Finished vector: \n";
    for(int i = 0; i < num_processes; ++i) std::cout << '[' << finished[i] << ']';
